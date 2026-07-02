@@ -1,0 +1,59 @@
+services:
+  init:
+    image: alpine
+    volumes:
+      - ./api_test.log:/app/api_test.log
+    command: sh -c "> /app/api_test.log"
+  api:
+    image: datascientest/fastapi:1.0.0
+    container_name: api
+    ports:
+      - "8000:8000"
+    networks:
+      - api_network
+    depends_on:
+      init:
+        condition: service_completed_successfully
+  test_1:
+    build: ./Test_1
+    volumes:
+      - ./Test_1/main.py:/app/main.py
+      - ./api_test.log:/app/api_test.log
+    networks:
+      - api_network
+    environment:
+      LOG: 1
+    depends_on: 
+      - api
+  test_2:
+    build: ./Test_2
+    volumes:
+      - ./Test_2/main.py:/app/main.py
+      - ./api_test.log:/app/api_test.log
+    networks:
+      - api_network
+    environment:
+      LOG: 1
+    depends_on: 
+      api:
+        condition: service_started
+      test_1:
+        condition: service_completed_successfully
+  test_3:
+    build: ./Test_3
+    volumes:
+      - ./Test_3/main.py:/app/main.py
+      - ./api_test.log:/app/api_test.log
+    networks:
+      - api_network
+    environment:
+      LOG: 1
+    depends_on: 
+      api:
+        condition: service_started
+      test_2:
+        condition: service_completed_successfully
+networks:
+  api_network:
+    
+    
