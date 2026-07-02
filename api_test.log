@@ -115,7 +115,35 @@ actual result = 0.5994
 request done at "/v1/sentiment"
 | username="alice"
 | password="wonderland"
+| sentence="that sucks"
+
+Expected result < 0; 
+actual result = -0.3612
+
+==>  SUCCESS
+
+============================
+    Content test
+============================
+
+request done at "/v2/sentiment"
+| username="alice"
+| password="wonderland"
 | sentence="life is beautiful"
+
+Expected result > 0; 
+actual result = 0.5994
+
+==>  SUCCESS
+
+============================
+    Content test
+============================
+
+request done at "/v2/sentiment"
+| username="alice"
+| password="wonderland"
+| sentence="that sucks"
 
 Expected result < 0; 
 actual result = -0.3612
